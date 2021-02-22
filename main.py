@@ -32,7 +32,7 @@ def kanalaSortutaAlaEz():
     erantzuna = requests.request(metodoa, uria, data=edukia, headers=goiburuak, allow_redirects=False)
     edukia = json.loads(erantzuna.content)
 
-    if(len(edukia)):
+    if(len(edukia) > 0):
         emaitza = True
         kanalID = edukia[0]['id']
         kanalAPI = edukia[0]['api_keys'][0]['api_key']
@@ -69,7 +69,7 @@ def datuIgoera(kanalAPI):
     metodoa = 'GET'
     uria = "https://api.thingspeak.com/update.json"
     goiburuak = {'Host': 'api.thingspeak.com'}
-    edukia = {'api_key':kanalAPI, '%CPU':cpu(), '%RAM':ram()}
+    edukia = {'api_key':kanalAPI, 'field1':cpu(), 'field2':ram()}
     erantzuna = requests.request(metodoa, uria, data=edukia, headers=goiburuak, allow_redirects=False)
     kodea = erantzuna.status_code
     deskribapena = erantzuna.reason
@@ -79,9 +79,17 @@ def datuIgoera(kanalAPI):
 
 
 def kanalaHustu():
+    metodoa = 'GET'
+    uria = "https://api.thingspeak.com/channels.json"
+    goiburuak = {'Host': 'api.thingspeak.com'}
+    edukia = {'api_key': 'YJYOOFOU0YKE2ZI9'}
+    erantzuna = requests.request(metodoa, uria, data=edukia, headers=goiburuak, allow_redirects=False)
+    edukia = json.loads(erantzuna.content)
+
+    kanalID = edukia[0]['id']
 
     metodoa = 'DELETE'
-    uria = "https://api.thingspeak.com/channels/"+kanalID+"/feeds.json"
+    uria = "https://api.thingspeak.com/channels/"+str(kanalID)+"/feeds.json"
     goiburuak = {'Host': 'api.thingspeak.com'}
     edukia = {'api_key': 'YJYOOFOU0YKE2ZI9'}
     erantzuna = requests.request(metodoa, uria, data=edukia, headers=goiburuak, allow_redirects=False)
