@@ -15,7 +15,7 @@ def ram():
     return psutil.virtual_memory()[2]
 
 def handler(sig_num,frame):
-    kanalaHustu()
+    kanalaHustu(kanalID)
     print('\nSignal handler called with signal ' + str(sig_num))
     print('Check signal number on ''https://en.wikipedia.org/wiki/Signal_%28IPC%29#Default_action')
     print('\nExiting gracefully')
@@ -53,6 +53,7 @@ def kanalaSortu():
     erantzuna = requests.request(metodoa, uria, data=edukia, headers=goiburuak, allow_redirects=False)
     edukia = json.loads(erantzuna.content)
 
+    global kanalID
     kanalID = edukia[0]['id']
     kanalAPI = edukia[0]['api_keys'][0]['api_key']
 
@@ -78,15 +79,7 @@ def datuIgoera(kanalAPI):
     print(edukia)
 
 
-def kanalaHustu():
-    metodoa = 'GET'
-    uria = "https://api.thingspeak.com/channels.json"
-    goiburuak = {'Host': 'api.thingspeak.com'}
-    edukia = {'api_key': 'YJYOOFOU0YKE2ZI9'}
-    erantzuna = requests.request(metodoa, uria, data=edukia, headers=goiburuak, allow_redirects=False)
-    edukia = json.loads(erantzuna.content)
-
-    kanalID = edukia[0]['id']
+def kanalaHustu(kanalID):
 
     metodoa = 'DELETE'
     uria = "https://api.thingspeak.com/channels/"+str(kanalID)+"/feeds.json"
@@ -107,6 +100,7 @@ if __name__ == '__main__':
     print('Running. Press CTRL-C to exit.')
 
     emaitza,kanalID,kanalAPI = kanalaSortutaAlaEz()
+
 
     if(emaitza == False):
         kanalID,kanalAPI = kanalaSortu()
